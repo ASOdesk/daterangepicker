@@ -483,6 +483,9 @@
             if (typeof startDate === 'object')
                 this.startDate = moment(startDate);
 
+            if (this.currentPeriod === 'months')
+                this.startDate.date(1);
+
             if (!this.timePicker)
                 this.startDate = this.startDate.startOf('day');
 
@@ -491,8 +494,6 @@
 
             if (this.minDate && this.startDate.isBefore(this.minDate)) {
                 this.startDate = this.minDate.clone();
-                if (this.currentPeriod === 'months')
-                    this.startDate.date(1);
                 if (this.timePicker && this.timePickerIncrement)
                     this.startDate.minute(Math.round(this.startDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
             }
@@ -516,6 +517,9 @@
             if (typeof endDate === 'object')
                 this.endDate = moment(endDate);
 
+            if (this.currentPeriod === 'months')
+                this.endDate.date(this.endDate.daysInMonth())
+
             if (!this.timePicker)
                 this.endDate = this.endDate.endOf('day');
 
@@ -530,9 +534,6 @@
 
             if (this.maxSpan && this.startDate.clone().add(this.maxSpan).isBefore(this.endDate))
                 this.endDate = this.startDate.clone().add(this.maxSpan);
-
-            if (this.currentPeriod === 'months')
-                this.endDate.date(this.endDate.daysInMonth())
 
             this.previousRightTime = this.endDate.clone();
 
@@ -840,7 +841,7 @@
                     for (var col = 0; col < 4; col++) {
                         var classes = ['available']
 
-                        if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
+                        if (calendar[row][col].isSame(this.startDate, 'month'))
                             classes.push('active', 'start-date');
 
                         if (calendar[row][col].isBefore(this.minDate, 'month'))
@@ -850,7 +851,7 @@
                             classes.push('off', 'disabled')
 
                         if (this.endDate &&
-                            moment(calendar[row][col]).date(calendar[row][col].daysInMonth()).format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD')) {
+                            moment(calendar[row][col]).isSame(this.endDate, 'month')) {
                             classes.push('active', 'end-date');
                         }
 
