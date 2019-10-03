@@ -714,18 +714,18 @@
                     }
                 }
             }
-            var rowSize = calendarSize >= 2 && calendarSize <= 5 && this.versions.length <= 17 ? Math.floor(calendarSize/2) : calendarSize < 3 ? calendarSize : 3;
-            var colSize = calendarSize < 3 ? calendarSize : 3;
-            var amountCells = rowSize*colSize;
-            var reversedVersions = this.versions.slice(0).reverse();
-            this.calendarVersions = this.versions.length/amountCells ?
-              new Array(Math.ceil(this.versions.length/amountCells)).fill(null).map(function () {
-                  return reversedVersions.splice(0, amountCells).reverse();
-              }) : [];
 
             if (this.currentPeriod === 'versions') {
+                var rowSize = calendarSize >= 2 && calendarSize <= 5 && this.versions.length <= 17 ? Math.floor(calendarSize/2) : calendarSize < 3 ? calendarSize : 3;
+                var colSize = calendarSize < 3 ? calendarSize : 3;
+                var amountCells = rowSize*colSize;
+                var reversedVersions = this.versions.slice(0).reverse();
+                this.calendarVersions = this.versions.length/amountCells ?
+                  new Array(Math.ceil(this.versions.length/amountCells)).fill(null).map(function () {
+                      return reversedVersions.splice(0, amountCells).reverse();
+                  }) : [];
+
                 var versionIndex = 0;
-                console.log(rowSize, colSize, this.calendarVersions[versionPage])
                 for (var row = 0; row < rowSize; row++) {
                     for (var col = 0; col < colSize; col++) {
                         var versionInfo = this.calendarVersions[versionPage] && this.calendarVersions[versionPage][versionIndex];
