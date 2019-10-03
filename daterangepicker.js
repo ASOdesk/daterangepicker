@@ -922,7 +922,7 @@
                     for (var col = 0; col < calendarSize; col++) {
                         var classes = ['available']
 
-                        if (calendar[row][col] && calendar[row][col].isSame(this.startDate))
+                        if (calendar[row][col] && calendar[row][col].isSame(this.startDate.format('MM/DD/YYYY')))
                             classes.push('active', 'start-date');
 
                         if (calendar[row][col] && this.endDate && moment(calendar[row][col]).isSame(this.endDate.format('MM/DD/YYYY'))) {
