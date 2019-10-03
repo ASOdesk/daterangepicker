@@ -4,7 +4,7 @@
       <meta charset="UTF-8" />
       <title>A date range picker for Bootstrap</title>
 
-      <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />-->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />
 
       <link rel="stylesheet" type="text/css" media="all" href="daterangepicker.css" />
 
@@ -27,7 +27,7 @@
         <h1 style="margin: 0 0 20px 0">Configuration Builder</h1>
 
         <div class="well configurator">
-           
+
           <form>
           <div class="row">
 
@@ -69,6 +69,19 @@
 
               <div class="checkbox">
                 <label>
+                  <input type="checkbox" id="monthsRange" checked="checked"> months range
+                </label>
+              </div>
+
+
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="customRange" checked="checked"> versions range
+                </label>
+              </div>
+
+              <div class="checkbox">
+                <label>
                   <input type="checkbox" id="singleDatePicker"> singleDatePicker
                 </label>
               </div>
@@ -93,7 +106,7 @@
 
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" id="timePicker" checked="checked"> timePicker
+                  <input type="checkbox" id="timePicker"> timePicker
                 </label>
               </div>
 
@@ -122,7 +135,7 @@
 
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" id="ranges" checked="checked"> ranges (with example predefined ranges)
+                  <input type="checkbox" id="ranges"> ranges (with example predefined ranges)
                 </label>
               </div>
 
@@ -235,7 +248,7 @@
         $('#config-text').keyup(function() {
           eval($(this).val());
         });
-        
+
         $('.configurator input, .configurator select').change(function() {
           updateConfig();
         });
@@ -257,11 +270,124 @@
         updateConfig();
 
         function updateConfig() {
-          var options = {};
+          var options = {
+            periods: [],
+            versions: [
+              {
+                title: 'v. 6.9.1 <br/> ' + moment([2019, 6, 1]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 6, 1])
+              },
+              {
+                title: 'v. 7.9.1 <br/> ' + moment([2019, 8, 8]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 8])
+              },
+              {
+                title: 'v. 8.9.1 <br/> ' + moment([2019, 8, 9]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 9])
+              },
+              {
+                title: 'v. 9.9.1 <br/> ' + moment([2019, 8, 13]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 13])
+              },
+              {
+                title: 'v. 10.9.1 <br/> ' + moment([2019, 8, 15]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 15])
+              },
+              {
+                title: 'v.11.9.1 <br/> ' + moment([2019, 8, 18]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 18])
+              },
+              {
+                title: 'v. 12.9.1 <br/> ' + moment([2019, 8, 21]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 21])
+              },
+              {
+                title: 'v. 14.9.1 <br/> ' + moment([2019, 8, 28]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 8, 28])
+              },
+              {
+                title: 'v. 17.9.1 <br/> ' + moment([2019, 9, 8]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 8])
+              },
+              {
+                title: 'v. 18.9.1 <br/> ' + moment([2019, 9, 9]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 9])
+              },
+              {
+                title: 'v. 19.9.1 <br/> ' + moment([2019, 9, 13]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 13])
+              },
+              {
+                title: 'v. 20.9.1 <br/> ' + moment([2019, 9, 15]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 15])
+              },
+              {
+                title: 'v.21.9.1 <br/> ' + moment([2019, 9, 18]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 18])
+              },
+              {
+                title: 'v. 22.9.1 <br/> ' + moment([2019, 9, 21]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 21])
+              },
+              {
+                title: 'v. 24.9.1 <br/> ' + moment([2019, 9, 28]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 9, 28])
+              },
+              {
+                title: 'v.31.9.1 <br/> ' + moment([2019, 10, 18]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 18])
+              },
+              {
+                title: 'v. 32.9.1 <br/> ' + moment([2019, 10, 21]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 21])
+              },
+              {
+                title: 'v. 34.9.1 <br/> ' + moment([2019, 10, 28]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 28])
+              },
+              {
+                title: 'v. 37.9.1 <br/> ' + moment([2019, 10, 8]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 8])
+              },
+              {
+                title: 'v. 38.9.1 <br/> ' + moment([2019, 10, 9]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 9])
+              },
+              {
+                title: 'v. 39.9.1 <br/> ' + moment([2019, 10, 13]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 13])
+              },
+              {
+                title: 'v. 40.9.1 <br/> ' + moment([2019, 10, 15]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 15])
+              },
+              {
+                title: 'v.41.9.1 <br/> ' + moment([2019, 10, 18]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 18])
+              },
+              {
+                title: 'v. 42.9.1 <br/> ' + moment([2019, 10, 21]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 21])
+              },
+              {
+                title: 'v. 44.9.1 <br/> ' + moment([2019, 10, 28]).format('MM/DD/YYYY'),
+                startDate: moment([2019, 10, 28])
+              }
+            ]
+          };
 
           if ($('#singleDatePicker').is(':checked'))
             options.singleDatePicker = true;
-          
+
+          if ($('#customRange').is(':checked'))
+            options.periods.push('custom');
+
+          options.periods.push('days');
+
+          if ($('#monthsRange').is(':checked'))
+            options.periods.push('months');
+
+
           if ($('#showDropdowns').is(':checked'))
             options.showDropdowns = true;
 
@@ -273,7 +399,7 @@
 
           if ($('#timePicker').is(':checked'))
             options.timePicker = true;
-          
+
           if ($('#timePicker24Hour').is(':checked'))
             options.timePicker24Hour = true;
 
@@ -282,7 +408,7 @@
 
           if ($('#timePickerSeconds').is(':checked'))
             options.timePickerSeconds = true;
-          
+
           if ($('#autoApply').is(':checked'))
             options.autoApply = true;
 
@@ -334,12 +460,12 @@
           if ($('#parentEl').val().length)
             options.parentEl = $('#parentEl').val();
 
-          if ($('#startDate').val().length) 
+          if ($('#startDate').val().length)
             options.startDate = $('#startDate').val();
 
           if ($('#endDate').val().length)
             options.endDate = $('#endDate').val();
-          
+
           if ($('#minDate').val().length)
             options.minDate = $('#minDate').val();
 
@@ -364,7 +490,7 @@
           $('#config-text').val("$('#demo').daterangepicker(" + JSON.stringify(options, null, '    ') + ", function(start, end, label) {\n  console.log(\"New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')\");\n});");
 
           $('#config-demo').daterangepicker(options, function(start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); }).click();;
-          
+
         }
 
       });

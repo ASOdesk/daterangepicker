@@ -49,7 +49,8 @@
         this.showCustomRangeLabel = true;
         this.timePicker = false;
         this.timePicker24Hour = false;
-        this.periods = ['days']
+        this.periods = ['days'];
+        this.versionPage = 0;
         this.currentPeriod = this.periods[0];
         this.timePickerIncrement = 1;
         this.timePickerSeconds = false;
@@ -77,7 +78,7 @@
             applyLabel: 'Apply',
             cancelLabel: 'Cancel',
             weekLabel: 'W',
-            customRangeLabel: 'Custom Range',
+            VersionsRangeLabel: 'Version Range',
             monthsRangeLabel: 'Months Range',
             daysRangeLabel: 'Days Range',
             daysOfWeek: moment.weekdaysMin(),
@@ -248,12 +249,6 @@
         if (typeof options.showCustomRangeLabel === 'boolean')
             this.showCustomRangeLabel = options.showCustomRangeLabel;
 
-        if (typeof options.singleDatePicker === 'boolean') {
-            this.singleDatePicker = options.singleDatePicker;
-            if (this.singleDatePicker)
-                this.endDate = this.startDate.clone();
-        }
-
         if (typeof options.timePicker === 'boolean')
             this.timePicker = options.timePicker;
 
@@ -287,6 +282,16 @@
         if (typeof options.periods === 'object' && options.periods.length) {
             this.periods = options.periods;
             this.currentPeriod = options.periods[0]
+        }
+
+        if (typeof options.versions === 'object' && options.versions.length) {
+            this.versions = options.versions;
+        }
+
+        if (typeof options.singleDatePicker === 'boolean') {
+            this.singleDatePicker = options.singleDatePicker;
+            if (this.singleDatePicker)
+                this.endDate = this.startDate.clone();
         }
 
         // update day names order to firstDay
@@ -381,6 +386,8 @@
                     list += '<li class="period-switch" data-range-key="' + this.locale.daysRangeLabel + '">' + this.locale.daysRangeLabel + '</li>'
                 if (this.periods[period] === 'months')
                     list += '<li class="period-switch" data-range-key="' + this.locale.monthsRangeLabel + '">' + this.locale.monthsRangeLabel + '</li>'
+                if (this.periods[period] === 'custom')
+                    list += '<li class="period-switch" data-range-key="' + this.locale.VersionsRangeLabel + '">' + this.locale.VersionsRangeLabel + '</li>'
             }
             list += '</ul>';
             this.container.find('.ranges').append(list);
@@ -677,6 +684,7 @@
             var lastYear = moment(firstDay).subtract(1, 'month').year();
             var daysInLastMonth = moment([lastYear, lastMonth]).daysInMonth();
             var dayOfWeek = firstDay.day();
+            var versionPage = side === 'left' ? this.versionPage + 1 : this.versionPage;
 
             //initialize a 6 rows x 7 columns array for the calendar
             var calendar = [];
@@ -685,6 +693,13 @@
 
             var calendarSize = 6; // days
             if (this.currentPeriod == 'months') calendarSize = 4;
+            if (this.currentPeriod === 'custom') {
+                calendarSize = 3;
+                if (this.versions.length/2 < Math.pow(calendarSize,2)) {
+                    calendarSize = Math.ceil(this.versions.length/2);
+                }
+            }
+
             for (var i = 0; i < calendarSize; i++) {
                 calendar[i] = [];
             }
@@ -692,9 +707,29 @@
             //populate the calendar with date objects
             if (this.currentPeriod === 'months') {
                 var month = 0
-                for (var row = 0; row < 3; row++) {
-                    for (var col = 0; col < 4; col++) {
+                for (var row = 0; row < calendarSize - 1; row++) {
+                    for (var col = 0; col < calendarSize; col++) {
                         calendar[row][col] = moment([lastYear, month++])
+                    }
+                }
+            }
+            var rowSize = calendarSize >= 2 && calendarSize <= 5 && this.versions.length <= 17 ? Math.floor(calendarSize/2) : calendarSize < 3 ? calendarSize : 3;
+            var colSize = calendarSize < 3 ? calendarSize : 3;
+            var amountCells = rowSize*colSize;
+            var reversedVersions = this.versions.slice(0).reverse();
+            this.calendarVersions = this.versions.length/amountCells ?
+              new Array(Math.ceil(this.versions.length/amountCells)).fill(null).map(function () {
+                  return reversedVersions.splice(0, amountCells).reverse();
+              }) : [];
+
+            if (this.currentPeriod === 'custom') {
+                var versionIndex = 0;
+                console.log(rowSize, colSize, this.calendarVersions[versionPage])
+                for (var row = 0; row < rowSize; row++) {
+                    for (var col = 0; col < colSize; col++) {
+                        var versionInfo = this.calendarVersions[versionPage] && this.calendarVersions[versionPage][versionIndex];
+                        calendar[row][col] = versionInfo && versionInfo.startDate;
+                        versionIndex++;
                     }
                 }
             }
@@ -754,15 +789,24 @@
             if (this.showWeekNumbers || this.showISOWeekNumbers)
                 header += '<th></th>';
 
-            if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'left')) {
-                header += '<th class="prev available"><span></span></th>';
+            if (this.currentPeriod === 'custom') {
+                header += this.versionPage < this.calendarVersions.length - 2 && side === 'left' ?
+                  '<th class="prev available"><span></span></th>' : '<th></th>';
             } else {
-                header += '<th></th>';
+                if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side === 'left')) {
+                    header += '<th class="prev available"><span></span></th>';
+                } else {
+                    header += '<th></th>';
+                }
             }
 
-            var dateHtml = this.locale.monthNames[calendar[1][1].month()] + calendar[1][1].format(" YYYY");
-            if (this.currentPeriod === 'months')
+            var dateHtml;
+            if (this.currentPeriod === 'months') {
                 dateHtml = calendar[1][1].format('YYYY')
+            } else if (this.currentPeriod !== 'custom') {
+                dateHtml = this.locale.monthNames[calendar[1][1].month()] + calendar[1][1].format(" YYYY");
+            }
+
 
             if (this.showDropdowns) {
                 var currentMonth = calendar[1][1].month();
@@ -797,11 +841,17 @@
                 dateHtml = monthHtml + yearHtml;
             }
 
-            header += '<th colspan="5" class="month">' + dateHtml + '</th>';
-            if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
-                header += '<th class="next available"><span></span></th>';
+            header += dateHtml ? '<th colspan="5" class="month">' + dateHtml + '</th>' : '';
+
+            if (this.currentPeriod === 'custom') {
+                header += this.versionPage !== 0 && side === 'right' ?
+                  '<th class="next available"><span></span></th>' : '<th></th>';
             } else {
-                header += '<th></th>';
+                if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
+                    header += '<th class="next available"><span></span></th>';
+                } else {
+                    header += '<th></th>';
+                }
             }
 
             header += '</tr>';
@@ -859,6 +909,37 @@
                             classes.push('in-range');
 
                         html += '<td class="month ' + classes.join(' ') + '" data-title="' + 'r' + row + 'c' + col + '">' + calendar[row][col].format('MMM') + '</td>'
+                    }
+                }
+                html += '</tr>'
+            }
+
+            if (this.currentPeriod === 'custom') {
+                var versionIndex = 0;
+                for (var row = 0; row < calendarSize; row++) {
+                    html += '<tr>'
+                    for (var col = 0; col < calendarSize; col++) {
+                        var classes = ['available']
+
+                        if (calendar[row][col] && calendar[row][col].isSame(this.startDate))
+                            classes.push('active', 'start-date');
+
+                        if (calendar[row][col] && this.endDate && moment(calendar[row][col]).isSame(this.endDate.format('MM/DD/YYYY'))) {
+                            classes.push('active', 'end-date');
+                        }
+
+                        if (
+                          this.endDate != null &&
+                          calendar[row][col] &&
+                          calendar[row][col] > this.startDate &&
+                          calendar[row][col] < this.endDate
+                        )
+                            classes.push('in-range');
+
+                        if (calendar[row][col]) {
+                            html += '<td class="month ' + classes.join(' ') + '" data-title="' + 'r' + row + 'c' + col + '">' + this.calendarVersions[versionPage][versionIndex]['title'] + '</td>'
+                            versionIndex++;
+                        }
                     }
                 }
                 html += '</tr>'
@@ -1303,6 +1384,10 @@
                 this.currentPeriod = 'days';
                 this.updateCalendars()
             }
+            else if (label == this.locale.VersionsRangeLabel) {
+                this.currentPeriod = 'custom';
+                this.updateCalendars()
+            }
             else {
                 this.currentPeriod = 'days';
                 var dates = this.ranges[label];
@@ -1334,6 +1419,9 @@
                         this.rightCalendar.year.subtract(1, 'year');
                     }
                 }
+                if (this.currentPeriod === 'custom') {
+                    this.versionPage++;
+                }
             } else {
                 if (this.currentPeriod === 'days') {
                     this.rightCalendar.month.subtract(1, 'month');
@@ -1358,6 +1446,9 @@
                     this.rightCalendar.year.add(1, 'year');
                     if (this.linkedCalendars)
                         this.leftCalendar.year.add(1, 'year');
+                }
+                if (this.currentPeriod === 'custom') {
+                    if (this.versionPage) this.versionPage--;
                 }
             }
             this.updateCalendars();
@@ -1484,6 +1575,7 @@
             if (this.periods.length > 1) {
                 if (this.currentPeriod == 'days') this.container.find('.period-switch[data-range-key="' + this.locale.daysRangeLabel + '"]').addClass('active')
                 if (this.currentPeriod == 'months') this.container.find('.period-switch[data-range-key="' + this.locale.monthsRangeLabel + '"]').addClass('active')
+                if (this.currentPeriod == 'custom') this.container.find('.period-switch[data-range-key="' + this.locale.VersionsRangeLabel + '"]').addClass('active')
             }
 
             var customRange = true;
