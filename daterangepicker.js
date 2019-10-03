@@ -386,7 +386,7 @@
                     list += '<li class="period-switch" data-range-key="' + this.locale.daysRangeLabel + '">' + this.locale.daysRangeLabel + '</li>'
                 if (this.periods[period] === 'months')
                     list += '<li class="period-switch" data-range-key="' + this.locale.monthsRangeLabel + '">' + this.locale.monthsRangeLabel + '</li>'
-                if (this.periods[period] === 'custom')
+                if (this.periods[period] === 'versions')
                     list += '<li class="period-switch" data-range-key="' + this.locale.VersionsRangeLabel + '">' + this.locale.VersionsRangeLabel + '</li>'
             }
             list += '</ul>';
@@ -693,7 +693,7 @@
 
             var calendarSize = 6; // days
             if (this.currentPeriod == 'months') calendarSize = 4;
-            if (this.currentPeriod === 'custom') {
+            if (this.currentPeriod === 'versions') {
                 calendarSize = 3;
                 if (this.versions.length/2 < Math.pow(calendarSize,2)) {
                     calendarSize = Math.ceil(this.versions.length/2);
@@ -722,7 +722,7 @@
                   return reversedVersions.splice(0, amountCells).reverse();
               }) : [];
 
-            if (this.currentPeriod === 'custom') {
+            if (this.currentPeriod === 'versions') {
                 var versionIndex = 0;
                 console.log(rowSize, colSize, this.calendarVersions[versionPage])
                 for (var row = 0; row < rowSize; row++) {
@@ -789,7 +789,7 @@
             if (this.showWeekNumbers || this.showISOWeekNumbers)
                 header += '<th></th>';
 
-            if (this.currentPeriod === 'custom') {
+            if (this.currentPeriod === 'versions') {
                 header += this.versionPage < this.calendarVersions.length - 2 && side === 'left' ?
                   '<th class="prev available"><span></span></th>' : '<th></th>';
             } else {
@@ -803,7 +803,7 @@
             var dateHtml;
             if (this.currentPeriod === 'months') {
                 dateHtml = calendar[1][1].format('YYYY')
-            } else if (this.currentPeriod !== 'custom') {
+            } else if (this.currentPeriod !== 'versions') {
                 dateHtml = this.locale.monthNames[calendar[1][1].month()] + calendar[1][1].format(" YYYY");
             }
 
@@ -843,7 +843,7 @@
 
             header += dateHtml ? '<th colspan="5" class="month">' + dateHtml + '</th>' : '';
 
-            if (this.currentPeriod === 'custom') {
+            if (this.currentPeriod === 'versions') {
                 header += this.versionPage !== 0 && side === 'right' ?
                   '<th class="next available"><span></span></th>' : '<th></th>';
             } else {
@@ -914,7 +914,7 @@
                 html += '</tr>'
             }
 
-            if (this.currentPeriod === 'custom') {
+            if (this.currentPeriod === 'versions') {
                 var versionIndex = 0;
                 for (var row = 0; row < calendarSize; row++) {
                     html += '<tr>'
@@ -1385,7 +1385,7 @@
                 this.updateCalendars()
             }
             else if (label == this.locale.VersionsRangeLabel) {
-                this.currentPeriod = 'custom';
+                this.currentPeriod = 'versions';
                 this.updateCalendars()
             }
             else {
@@ -1419,7 +1419,7 @@
                         this.rightCalendar.year.subtract(1, 'year');
                     }
                 }
-                if (this.currentPeriod === 'custom') {
+                if (this.currentPeriod === 'versions') {
                     this.versionPage++;
                 }
             } else {
@@ -1447,7 +1447,7 @@
                     if (this.linkedCalendars)
                         this.leftCalendar.year.add(1, 'year');
                 }
-                if (this.currentPeriod === 'custom') {
+                if (this.currentPeriod === 'versions') {
                     if (this.versionPage) this.versionPage--;
                 }
             }
@@ -1575,7 +1575,7 @@
             if (this.periods.length > 1) {
                 if (this.currentPeriod == 'days') this.container.find('.period-switch[data-range-key="' + this.locale.daysRangeLabel + '"]').addClass('active')
                 if (this.currentPeriod == 'months') this.container.find('.period-switch[data-range-key="' + this.locale.monthsRangeLabel + '"]').addClass('active')
-                if (this.currentPeriod == 'custom') this.container.find('.period-switch[data-range-key="' + this.locale.VersionsRangeLabel + '"]').addClass('active')
+                if (this.currentPeriod == 'versions') this.container.find('.period-switch[data-range-key="' + this.locale.VersionsRangeLabel + '"]').addClass('active')
             }
 
             var customRange = true;
