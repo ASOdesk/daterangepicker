@@ -78,7 +78,8 @@
             applyLabel: 'Apply',
             cancelLabel: 'Cancel',
             weekLabel: 'W',
-            VersionsRangeLabel: 'Version Range',
+            customRangeLabel: 'Custom Range',
+            versionsRangeLabel: 'Version Range',
             monthsRangeLabel: 'Months Range',
             daysRangeLabel: 'Days Range',
             daysOfWeek: moment.weekdaysMin(),
@@ -387,7 +388,7 @@
                 if (this.periods[period] === 'months')
                     list += '<li class="period-switch" data-range-key="' + this.locale.monthsRangeLabel + '">' + this.locale.monthsRangeLabel + '</li>'
                 if (this.periods[period] === 'versions')
-                    list += '<li class="period-switch" data-range-key="' + this.locale.VersionsRangeLabel + '">' + this.locale.VersionsRangeLabel + '</li>'
+                    list += '<li class="period-switch" data-range-key="' + this.locale.versionsRangeLabel + '">' + this.locale.versionsRangeLabel + '</li>'
             }
             list += '</ul>';
             this.container.find('.ranges').append(list);
@@ -1384,7 +1385,7 @@
                 this.currentPeriod = 'days';
                 this.updateCalendars()
             }
-            else if (label == this.locale.VersionsRangeLabel) {
+            else if (label == this.locale.versionsRangeLabel) {
                 this.currentPeriod = 'versions';
                 this.updateCalendars()
             }
@@ -1575,7 +1576,7 @@
             if (this.periods.length > 1) {
                 if (this.currentPeriod == 'days') this.container.find('.period-switch[data-range-key="' + this.locale.daysRangeLabel + '"]').addClass('active')
                 if (this.currentPeriod == 'months') this.container.find('.period-switch[data-range-key="' + this.locale.monthsRangeLabel + '"]').addClass('active')
-                if (this.currentPeriod == 'versions') this.container.find('.period-switch[data-range-key="' + this.locale.VersionsRangeLabel + '"]').addClass('active')
+                if (this.currentPeriod == 'versions') this.container.find('.period-switch[data-range-key="' + this.locale.versionsRangeLabel + '"]').addClass('active')
             }
 
             var customRange = true;
